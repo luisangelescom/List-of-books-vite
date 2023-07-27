@@ -5,7 +5,7 @@ import { IconRemove } from './icons'
 function ItemBook ({ book, removeItem, addBookUser, isRemove = false }: ItemBookProps): JSX.Element {
   const { ISBN, cover, title, genre, year } = book
 
-  const buttonContainer = useRef<HTMLButtonElement>(null)
+  const buttonContainer = useRef<HTMLDivElement>(null)
   const action = (callback: () => void, back = false): void => {
     if (buttonContainer.current != null) {
       buttonContainer.current.style.zIndex = '1000'
@@ -20,12 +20,12 @@ function ItemBook ({ book, removeItem, addBookUser, isRemove = false }: ItemBook
   }
 
   return (
-    <button
+    <div
       title={isRemove ? title : `Add ${title}`}
       aria-label={title}
       key={ISBN}
       ref={buttonContainer}
-      className={`group w-full ${isRemove ? 'h-[260px] cursor-auto' : 'h-[350px]'} items-center flex flex-col relative border-2 border-white/20 rounded-lg transition-all duration-500`}
+      className={`group w-full ${isRemove ? 'h-[260px] cursor-auto' : 'h-[350px] cursor-pointer'} items-center flex flex-col relative border-2 border-white/20 rounded-lg transition-all duration-500`}
       onClick={() => {
         if (addBookUser != null) {
           action(() => addBookUser(book))
@@ -69,7 +69,7 @@ function ItemBook ({ book, removeItem, addBookUser, isRemove = false }: ItemBook
           </span>
         </div>
       </div>
-    </button>
+    </div>
   )
 }
 

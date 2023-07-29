@@ -7,32 +7,40 @@ function ItemBook ({ book, removeItem, addBookUser, isRemove = false }: ItemBook
 
   const buttonContainer = useRef<HTMLDivElement>(null)
   const action = (callback: () => void, back = false): void => {
-    if (buttonContainer.current != null) {
+    const listButton = document.getElementById('list-book-user')
+
+    if (buttonContainer.current !== null && listButton !== null) {
+      const { top: topList, left: leftList } = listButton.getBoundingClientRect()
       const { width, height, left, top } = buttonContainer.current.getBoundingClientRect()
 
       buttonContainer.current.style.zIndex = '1000'
       buttonContainer.current.style.position = 'fixed'
+      buttonContainer.current.style.overflow = 'hidden'
       buttonContainer.current.style.width = `${width}px`
       buttonContainer.current.style.height = `${height}px`
       buttonContainer.current.style.left = `${left}px`
       buttonContainer.current.style.top = `${top}px`
 
-      buttonContainer.current.animate({
-        width: '100px',
-        height: '100px',
-        left: back ? '20%' : 'calc(100% - 120px)',
-        top: back ? '50%' : '3rem'
-        // transform: back ? 'translate(-50vw,-50vh)' : 'translate(0px,0px)'
-      }, { duration: 450, easing: 'ease-in' }).finished.then(() => {
-        callback()
-      }).finally(() => {})
+      buttonContainer.current
+        .animate(
+          {
+            width: '50px',
+            height: '50px',
+            left: back ? '50%' : `${leftList - 5}px`,
+            top: back ? '50%' : `${topList}px`
+            // transform: back ? 'translate(-50vw,-50vh)' : 'translate(0px,0px)'
+          },
+          { duration: 250 }
+        )
+        .finished.then(() => {
+          callback()
+        })
+        .catch(() => {})
     }
   }
 
   return (
-    <div
-      className={`group w-full ${isRemove ? 'h-[260px] cursor-auto' : 'h-[350px] cursor-pointer'}`}
-    >
+    <div className={`group w-full ${isRemove ? 'h-[260px] cursor-auto' : 'h-[350px] cursor-pointer'}`}>
       <div
         title={isRemove ? title : `Add ${title}`}
         aria-label={title}
@@ -55,7 +63,6 @@ function ItemBook ({ book, removeItem, addBookUser, isRemove = false }: ItemBook
               onClick={() => {
                 if (removeItem != null) {
                   action(() => removeItem(ISBN), true)
-                // removeItem()
                 }
               }}
             >
